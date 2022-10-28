@@ -17,16 +17,29 @@ namespace BackEnd.Controllers
         private ICategoryDAL categoryDAL;
        
         //método para convertir
-        private CategoryModel Convertir(Category category)
+        CategoryModel Convertir(Category category)
         {
             return new CategoryModel
                 {
                     CategoryId = category.CategoryId,
                     CategoryName = category.CategoryName,
-                    Description = category.Description
+                    Description = category.Description,
+                    //para incluir la imagen que esta en db
+                    Picture = category.Picture
                 };           
         }
 
+        Category Convertir(CategoryModel category)
+        {
+            return new Category
+            {
+                CategoryId = category.CategoryId,
+                CategoryName = category.CategoryName,
+                Description = category.Description,
+                //para incluir la imagen que esta en db
+                Picture = category.Picture
+            };
+        }
         //constructor
         public CategoryController()
         {
@@ -69,21 +82,21 @@ namespace BackEnd.Controllers
             return new JsonResult(result);
         }
 
-        [Route("GetByNameSP")]
-        [HttpGet]
-        public JsonResult Get(string Name)
-        {
-            IEnumerable<Category> categories;
-            categories = categoryDAL.GetByNameSP(Name);
+        //[Route("GetByNameSP")]
+        //[HttpGet]
+        //public JsonResult Get(string Name)
+        //{
+        //    IEnumerable<Category> categories;
+        //    categories = categoryDAL.GetByNameSP(Name);
 
-            List<CategoryModel> result = new List<CategoryModel>();
-            foreach (Category category in categories)
-            {
-                result.Add(Convertir(category)
-                    );
-            }
-                return new JsonResult(result);
-        }
+        //    List<CategoryModel> result = new List<CategoryModel>();
+        //    foreach (Category category in categories)
+        //    {
+        //        result.Add(Convertir(category)
+        //            );
+        //    }
+        //        return new JsonResult(result);
+        //}
 
 
         // GET api/<CategoryController>/5
@@ -109,13 +122,14 @@ namespace BackEnd.Controllers
         // POST api/<CategoryController>
         //funciona igual para el SP que el original generico.
         [HttpPost]
-        public JsonResult Post([FromBody] Category category)
+        public JsonResult Post([FromBody] CategoryModel category)
         {
             try
             {
-                categoryDAL.Add(category); //está agregando por medio del SP en Impl
+                Category entity = Convertir(category);
+                categoryDAL.Add(entity); //está agregando por medio del SP en Impl
 
-                return new JsonResult(Convertir(category));
+                return new JsonResult(Convertir(entity));
             }
             catch (Exception)
             {

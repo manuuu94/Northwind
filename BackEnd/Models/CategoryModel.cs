@@ -10,6 +10,9 @@ namespace BackEnd.Models
         [Required]
         public string CategoryName { get; set; } = null!;
         public string? Description { get; set; }
-        //no incluimos la imagen
+
+
+        public byte[]? Picture { get; set; }
+
     }
 }

@@ -37,7 +37,7 @@ namespace FrontEnd.Controllers
             try
             {
                 ServiceRepository serviceObj = new ServiceRepository();
-                //concatenarle el ID para el argumento 
+                //concatenarle el ID del argumento 
                 HttpResponseMessage response = serviceObj.GetResponse("api/category/" + id.ToString());
                 response.EnsureSuccessStatusCode();
                 //devuelve solo un producto tipo catviewmodel
@@ -56,16 +56,31 @@ namespace FrontEnd.Controllers
             return View();
         }
 
+        //IFormFile es para pasar una lista del upload. hay que enviar la imagen por aparte.
         [HttpPost]
-        public ActionResult Create(CategoryViewModel category)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(CategoryViewModel category, List<IFormFile> upload)
         {
             try
             {
+                if (upload.Count > 0)
+                {
+                    foreach (var file in upload)
+                    {
+                        //crea una var ms tipo MemoryStream
+                        using (var ms = new MemoryStream())
+                        {
+                            //cambia el ms (memorystream) a ser un arreglo para poderlo guardar en el picture
+                            file.CopyTo(ms);
+                            category.Picture = ms.ToArray();
+                        }
+                    }
+                }
                 ServiceRepository serviceObj = new ServiceRepository();
                 HttpResponseMessage response = serviceObj.PostResponse("api/category/",category);
                 response.EnsureSuccessStatusCode();
                 CategoryViewModel categoryViewModel = response.Content.ReadAsAsync<CategoryViewModel>().Result;
-                return View(categoryViewModel);
+                //return View(categoryViewModel);
 
                 return RedirectToAction("Details",new {id = categoryViewModel.CategoryId});  
             }
@@ -93,10 +108,23 @@ namespace FrontEnd.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(CategoryViewModel category)
+        public ActionResult Edit(CategoryViewModel category, List<IFormFile>upload)
         {
             try
             {
+                if (upload.Count > 0)
+                {
+                    foreach (var file in upload)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            file.CopyTo(ms);
+                            category.Picture = ms.ToArray();
+
+                        }
+                    }
+
+                }
                 ServiceRepository serviceObj = new ServiceRepository();
                 HttpResponseMessage response = serviceObj.PutResponse("api/category/", category);
                 response.EnsureSuccessStatusCode();

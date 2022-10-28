@@ -58,33 +58,49 @@ namespace DAL.Implementations
         //    }
 
         //metodo para añadir una nueva Category por SP. Cada entidad tendria una.
+        //public bool Add(Category entity)
+        //{
+        //    try
+        //    {
+        //        //no requiere ser mapeado de DBContext porque no regresa nada. Solo True o False. 
+        //        //ejecuta el SQL directamente, sin retornar ExecuteSqlRaw
+        //        string sql = "[dbo].[sp_add_Category] @CategoryName, @Description";
+        //        var param = new SqlParameter[] {
+        //                new SqlParameter() {
+        //                    ParameterName = "@CategoryName",
+        //                    SqlDbType =  System.Data.SqlDbType.VarChar,
+        //                    Size = 10,
+        //                    Direction = System.Data.ParameterDirection.Input,
+        //                    Value = entity.CategoryName
+        //                },
+        //                  new SqlParameter() {
+        //                    ParameterName = "@Description",
+        //                    SqlDbType =  System.Data.SqlDbType.VarChar,
+        //                    Size = 10,
+        //                    Direction = System.Data.ParameterDirection.Input,
+        //                    Value = entity.Description
+        //                }
+        //                  //no pone picture porque no importa que vaya vacio, y el ID es automático.
+        //                  //para editar la DB se usar ExecuteSqlRaw. Para Consultar FromSqlRaw.
+        //        };
+        //        context.Database.ExecuteSqlRaw(sql, param);
+        //        return true;
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        return false;
+        //    }
+        //}
         public bool Add(Category entity)
         {
             try
             {
-                //no requiere ser mapeado de DBContext porque no regresa nada. Solo True o False. 
-                //ejecuta el SQL directamente, sin retornar ExecuteSqlRaw
-                string sql = "[dbo].[sp_add_Category] @CategoryName, @Description";
-                var param = new SqlParameter[] {
-                        new SqlParameter() {
-                            ParameterName = "@CategoryName",
-                            SqlDbType =  System.Data.SqlDbType.VarChar,
-                            Size = 10,
-                            Direction = System.Data.ParameterDirection.Input,
-                            Value = entity.CategoryName
-                        },
-                          new SqlParameter() {
-                            ParameterName = "@Description",
-                            SqlDbType =  System.Data.SqlDbType.VarChar,
-                            Size = 10,
-                            Direction = System.Data.ParameterDirection.Input,
-                            Value = entity.Description
-                        }
-                          //no pone picture porque no importa que vaya vacio, y el ID es automático.
-                          //para editar la DB se usar ExecuteSqlRaw. Para Consultar FromSqlRaw.
-                };
-                context.Database.ExecuteSqlRaw(sql, param);
-                return true;
+                using (UnidadDeTrabajo<Category> unidad = new UnidadDeTrabajo<Category>(context))
+                {
+                    unidad.genericDAL.Add(entity);
+                    return unidad.Complete();
+                }
             }
             catch (Exception)
             {
@@ -92,6 +108,8 @@ namespace DAL.Implementations
                 return false;
             }
         }
+
+
 
         public void AddRange(IEnumerable<Category> entities)
             {
