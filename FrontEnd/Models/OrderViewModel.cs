@@ -19,7 +19,7 @@ namespace FrontEnd.Models
         public DateTime? OrderDate { get; set; }
         public DateTime? RequiredDate { get; set; }
         public DateTime? ShippedDate { get; set; }
-        public int? ShipVia { get; set; }
+        public int ShipVia { get; set; }
         public List<ShipperViewModel> Shippers { get; set; }
         public ShipperViewModel Shipper { get; set; }
 

@@ -7,6 +7,24 @@ namespace FrontEnd.Controllers
 {
     public class OrderController : Controller
     {
+
+        private ShipperViewModel GetShipper(int id)
+        {
+            try
+            {
+                ServiceRepository serviceObj = new ServiceRepository();
+                HttpResponseMessage response = serviceObj.GetResponse("api/shipper/" + id.ToString());
+                response.EnsureSuccessStatusCode();
+                Models.ShipperViewModel shipperViewModel = response.Content.ReadAsAsync<Models.ShipperViewModel>().Result;
+                return shipperViewModel;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
         private List<EmployeeViewModel> GetEmployees()
         {
             ServiceRepository serviceObj = new ServiceRepository();
@@ -71,6 +89,9 @@ namespace FrontEnd.Controllers
             HttpResponseMessage response = serviceObj.GetResponse("api/order/" + id.ToString());
             response.EnsureSuccessStatusCode();
             OrderViewModel OrderViewModel = response.Content.ReadAsAsync<OrderViewModel>().Result;
+
+            OrderViewModel.Shipper = this.GetShipper(OrderViewModel.ShipVia);
+
             return View(OrderViewModel);
         }
 
