@@ -23,12 +23,16 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.SupplierID)
         </dd>
-        <dt class = "col-sm-2">
+@*        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CategoryID)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CategoryID)
-        </dd>
+        </dd>*@
+
+        <partial name="_CategoryDetails" model="Model.Category"/>
+
+
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Discontinued)
         </dt>

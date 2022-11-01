@@ -8,6 +8,25 @@ namespace FrontEnd.Controllers
 {
     public class ProductController : Controller
     {
+        //para devolver una vista parcial de category details
+        private CategoryViewModel GetCategory(int id)
+        {
+            try
+            {
+                ServiceRepository serviceObj = new ServiceRepository();
+                //concatenarle el ID del argumento 
+                HttpResponseMessage response = serviceObj.GetResponse("api/category/" + id.ToString());
+                response.EnsureSuccessStatusCode();
+                //devuelve solo un producto tipo catviewmodel
+                //CategoryViewModel categoryViewModel = response.Content.ReadAsAsync<Models.CategoryViewModel>().Result;
+                Models.CategoryViewModel categoryViewModel = response.Content.ReadAsAsync<Models.CategoryViewModel>().Result;
+                return categoryViewModel;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         private List<CategoryViewModel> GetCategories()
         {
@@ -72,6 +91,10 @@ namespace FrontEnd.Controllers
             response.EnsureSuccessStatusCode();
             ProductViewModel ProductViewModel = response.Content.ReadAsAsync<ProductViewModel>().Result;
             //ViewBag.Title = "All Products";
+
+            //guarda el objeto category dentro de Product View Model.
+            ProductViewModel.Category = this.GetCategory(ProductViewModel.CategoryID);
+
             return View(ProductViewModel);
         }
 

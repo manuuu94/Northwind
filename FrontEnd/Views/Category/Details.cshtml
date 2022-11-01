@@ -6,7 +6,7 @@
 
 <h1>Details</h1>
 
-<div>
+@*<div>
     <h4>CategoryViewModel</h4>
     <hr />
     <dl class="row">
@@ -27,14 +27,14 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Description)
-        </dd>
+        </dd>*@
 @*        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Picture)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Picture)
         </dd>*@
-
+@*
          @{
             string imageBase64 = Convert.ToBase64String(Model.Picture);
             //que tipo de formato viene. si no es el formato correcto (jpg) va a salir un logo y no la imagen. 
@@ -42,9 +42,15 @@
 
             <img src="@imageSrc" width="500" height="500" />
 
-        }
-    </dl>
-</div>
+        }*@
+@*    </dl>
+</div>*@
+
+@* esta vista puede reutilizar en otras aginas como DELETE, por ejemplo.*@
+ <partial name="_CategoryDetails" model="Model" />
+
+
+
 <div>
     @Html.ActionLink("Edit", "Edit", new {  id = Model.CategoryId  }) |
     <a asp-action="Index">Back to List</a>
